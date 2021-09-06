@@ -7,8 +7,9 @@
 	export let type: 'number' | 'text' = 'text';
 	export let min: number | null = null;
 	export let max: number | null = null;
+	export let editOnInit = false;
 
-	let editing: boolean = false;
+	let editing = editOnInit;
 
 	$: empty = type === 'number' ? value == null : !value;
 

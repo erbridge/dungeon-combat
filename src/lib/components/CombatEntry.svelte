@@ -18,7 +18,7 @@
 </script>
 
 <tr>
-	<CombatEntryCell type="text" name="name" value={combatant.name} on:change={change} />
+	<CombatEntryCell type="text" name="name" value={combatant.name} editOnInit on:change={change} />
 	<CombatEntryCell
 		type="number"
 		name="initiative"
