@@ -6,7 +6,8 @@
 		name: '',
 		initiative: null,
 		damage: null,
-		hp: null
+		hp: null,
+		notes: ''
 	};
 
 	let combatants: Combatant[] = [];
@@ -30,6 +31,7 @@
 		<th>Initiative</th>
 		<th>Damage taken</th>
 		<th>Hit points</th>
+		<th>Notes</th>
 	</tr>
 
 	{#each combatants as combatant, i}

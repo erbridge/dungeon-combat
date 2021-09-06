@@ -3,4 +3,5 @@ export type Combatant = {
 	initiative: number | null;
 	damage: number | null;
 	hp: number | null;
+	notes: string;
 };
