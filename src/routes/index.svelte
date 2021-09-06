@@ -1,15 +1,22 @@
 <script lang="ts">
-	let combatants = [];
+	type Combatant = {
+		name: string;
+		initiative: number | null;
+		damage: number | null;
+		hp: number | null;
+	};
+
+	const blankCombatant: Combatant = {
+		name: '',
+		initiative: null,
+		damage: null,
+		hp: null
+	};
+
+	let combatants: Combatant[] = [];
 
 	function createNewCombatant() {
-		const blankCombatant = {
-			name: '',
-			initiative: null,
-			damage: 0,
-			hp: null
-		};
-
-		combatants = [...combatants, blankCombatant];
+		combatants = [...combatants, { ...blankCombatant }];
 	}
 
 	function updateCombatant(index: number) {
