@@ -2,18 +2,20 @@
 	import CombatEntry from '$lib/components/CombatEntry.svelte';
 	import type { Combatant } from '$lib/models/Combatant';
 
-	const blankCombatant: Combatant = {
-		name: '',
-		initiative: null,
-		damage: null,
-		hp: null,
-		notes: ''
-	};
-
 	let combatants: Combatant[] = [];
 
 	function createNewCombatant() {
-		combatants = [...combatants, { ...blankCombatant }];
+		combatants = [
+			...combatants,
+			{
+				id: (combatants.map(({ id }) => id).sort()[combatants.length - 1] ?? -1) + 1,
+				name: '',
+				initiative: null,
+				damage: null,
+				hp: null,
+				notes: ''
+			}
+		];
 	}
 
 	function updateCombatant(index: number) {
@@ -27,6 +29,7 @@
 
 <table>
 	<tr>
+		<th>ID</th>
 		<th>Name</th>
 		<th>Initiative</th>
 		<th>Damage taken</th>

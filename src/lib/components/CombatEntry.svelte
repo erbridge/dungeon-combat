@@ -18,6 +18,7 @@
 </script>
 
 <tr>
+	<td>{combatant.id}</td>
 	<CombatEntryCell type="text" name="name" value={combatant.name} editOnInit on:change={change} />
 	<CombatEntryCell
 		type="number"
