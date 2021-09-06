@@ -14,6 +14,12 @@
 
 	const dispatch = createEventDispatcher<{ change: { name: typeof name; value: typeof value } }>();
 
+	function focusOnEdit(element: HTMLInputElement) {
+		if (editing) {
+			element.focus();
+		}
+	}
+
 	function change(event: Event & { currentTarget: EventTarget & HTMLInputElement }) {
 		const newValue =
 			type === 'number' ? parseInt(event.currentTarget.value) : event.currentTarget.value;
@@ -37,6 +43,7 @@
 			on:blur={() => {
 				editing = false;
 			}}
+			use:focusOnEdit
 		/>
 	{:else}
 		<span
