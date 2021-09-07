@@ -7,18 +7,21 @@
 	let engagementGroups: EngagementGroup[] = [];
 	let engagingCombatant: Combatant['id'] | null = null;
 
-	function createNewCombatant() {
-		combatants = [
-			...combatants,
-			{
-				id: (combatants.map(({ id }) => id).sort()[combatants.length - 1] ?? -1) + 1,
-				name: '',
-				initiative: null,
-				damage: null,
-				hp: null,
-				notes: ''
-			}
-		];
+	function createNewCombatant(player: boolean) {
+		return () => {
+			combatants = [
+				...combatants,
+				{
+					id: (combatants.map(({ id }) => id).sort()[combatants.length - 1] ?? -1) + 1,
+					name: '',
+					initiative: null,
+					damage: null,
+					hp: null,
+					notes: '',
+					player
+				}
+			];
+		};
 	}
 
 	function updateCombatant(index: number) {
@@ -107,4 +110,5 @@
 	</ul>
 {/if}
 
-<button on:click={createNewCombatant}>New combatant</button>
+<button on:click={createNewCombatant(true)}>New player</button>
+<button on:click={createNewCombatant(false)}>New non-player</button>

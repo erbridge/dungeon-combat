@@ -5,4 +5,5 @@ export type Combatant = {
 	damage: number | null;
 	hp: number | null;
 	notes: string;
+	player: boolean;
 };

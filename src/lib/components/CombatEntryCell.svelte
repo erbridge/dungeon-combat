@@ -2,7 +2,7 @@
 	import type { Combatant } from '$lib/models/Combatant';
 	import { createEventDispatcher } from 'svelte';
 
-	export let name: keyof Combatant;
+	export let name: keyof Omit<Combatant, 'player'>;
 	export let value: Combatant[typeof name];
 	export let type: 'number' | 'text' = 'text';
 	export let min: number | null = null;

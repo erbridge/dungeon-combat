@@ -43,14 +43,18 @@
 		value={combatant.initiative}
 		on:change={change}
 	/>
-	<CombatEntryCell
-		type="number"
-		name="damage"
-		min={0}
-		max={combatant.hp}
-		value={combatant.damage}
-		on:change={change}
-	/>
+	{#if combatant.player}
+		<td />
+	{:else}
+		<CombatEntryCell
+			type="number"
+			name="damage"
+			min={0}
+			max={combatant.hp}
+			value={combatant.damage}
+			on:change={change}
+		/>
+	{/if}
 	<CombatEntryCell type="number" name="hp" min={1} value={combatant.hp} on:change={change} />
 	<CombatEntryCell type="text" name="notes" value={combatant.notes} on:change={change} />
 
