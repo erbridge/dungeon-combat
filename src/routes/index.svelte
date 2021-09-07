@@ -49,6 +49,28 @@
 			engagingCombatant = null;
 		};
 	}
+
+	function disengageCombatant(event: CustomEvent<Combatant['id']>) {
+		engagingCombatant = null;
+
+		const group = engagementGroups.find(({ combatants }) => combatants.includes(event.detail));
+
+		if (group) {
+			const combatants = group.combatants.filter((id) => id !== event.detail);
+
+			if (combatants.length > 1) {
+				engagementGroups = [
+					...engagementGroups.filter(({ id }) => id !== group.id),
+					{
+						...group,
+						combatants
+					}
+				].sort((a, b) => a.id - b.id);
+			} else {
+				engagementGroups = engagementGroups.filter(({ id }) => id !== group.id);
+			}
+		}
+	}
 </script>
 
 <h1>Dungeon Combat</h1>
@@ -70,6 +92,7 @@
 			{engagementGroups}
 			on:change={updateCombatant(i)}
 			on:engage={setEngagingCombatant}
+			on:disengage={disengageCombatant}
 		/>
 	{/each}
 </table>

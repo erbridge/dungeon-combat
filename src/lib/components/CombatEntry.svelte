@@ -12,6 +12,7 @@
 	const dispatch = createEventDispatcher<{
 		change: Combatant;
 		engage: Combatant['id'];
+		disengage: Combatant['id'];
 	}>();
 
 	function change(
@@ -25,6 +26,10 @@
 
 	function engage() {
 		dispatch('engage', combatant.id);
+	}
+
+	function disengage() {
+		dispatch('disengage', combatant.id);
 	}
 </script>
 
@@ -49,7 +54,9 @@
 	<CombatEntryCell type="number" name="hp" min={1} value={combatant.hp} on:change={change} />
 	<CombatEntryCell type="text" name="notes" value={combatant.notes} on:change={change} />
 
-	{#if !engagementGroup}
+	{#if engagementGroup}
+		<button on:click={disengage}>Disengage</button>
+	{:else}
 		<button on:click={engage}>Engage with...</button>
 	{/if}
 </tr>
