@@ -54,9 +54,11 @@
 	<CombatEntryCell type="number" name="hp" min={1} value={combatant.hp} on:change={change} />
 	<CombatEntryCell type="text" name="notes" value={combatant.notes} on:change={change} />
 
-	{#if engagementGroup}
-		<button on:click={disengage}>Disengage</button>
-	{:else}
-		<button on:click={engage}>Engage with...</button>
+	{#if combatant.name}
+		{#if engagementGroup}
+			<button on:click={disengage}>Disengage</button>
+		{:else}
+			<button on:click={engage}>Engage with...</button>
+		{/if}
 	{/if}
 </tr>
