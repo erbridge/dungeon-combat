@@ -1,32 +1,44 @@
 <script lang="ts">
 	import CombatEntry from '$lib/components/CombatEntry.svelte';
 	import type { Combatant } from '$lib/models/Combatant';
-	import type { EngagementGroup } from '$lib/models/EngagementGroup';
+	import type { Encounter } from '$lib/models/Encounter';
 
-	let combatants: Combatant[] = [];
-	let engagementGroups: EngagementGroup[] = [];
+	let encounter: Encounter = {
+		combatants: [],
+		engagementGroups: []
+	};
+
+	$: combatants = encounter.combatants;
+	$: engagementGroups = encounter.engagementGroups;
+
 	let engagingCombatant: Combatant['id'] | null = null;
 
 	function createNewCombatant(player: boolean) {
 		return () => {
-			combatants = [
-				...combatants,
-				{
-					id: (combatants.map(({ id }) => id).sort()[combatants.length - 1] ?? -1) + 1,
-					name: '',
-					initiative: null,
-					damage: null,
-					hp: null,
-					notes: '',
-					player
-				}
-			];
+			encounter = {
+				...encounter,
+				combatants: [
+					...combatants,
+					{
+						id: (combatants.map(({ id }) => id).sort()[combatants.length - 1] ?? -1) + 1,
+						name: '',
+						initiative: null,
+						damage: null,
+						hp: null,
+						notes: '',
+						player
+					}
+				]
+			};
 		};
 	}
 
 	function updateCombatant(index: number) {
 		return (event: CustomEvent<Combatant>) => {
-			combatants = [...combatants.slice(0, index), event.detail, ...combatants.slice(index + 1)];
+			encounter = {
+				...encounter,
+				combatants: [...combatants.slice(0, index), event.detail, ...combatants.slice(index + 1)]
+			};
 		};
 	}
 
@@ -41,14 +53,16 @@
 				combatants: [id]
 			};
 
-			engagementGroups = [
-				...engagementGroups.filter(({ id }) => id !== group.id),
-				{
-					...group,
-					combatants: [...group.combatants, engagingCombatant]
-				}
-			].sort((a, b) => a.id - b.id);
-
+			encounter = {
+				...encounter,
+				engagementGroups: [
+					...engagementGroups.filter(({ id }) => id !== group.id),
+					{
+						...group,
+						combatants: [...group.combatants, engagingCombatant]
+					}
+				].sort((a, b) => a.id - b.id)
+			};
 			engagingCombatant = null;
 		};
 	}
@@ -62,15 +76,21 @@
 			const combatants = group.combatants.filter((id) => id !== event.detail);
 
 			if (combatants.length > 1) {
-				engagementGroups = [
-					...engagementGroups.filter(({ id }) => id !== group.id),
-					{
-						...group,
-						combatants
-					}
-				].sort((a, b) => a.id - b.id);
+				encounter = {
+					...encounter,
+					engagementGroups: [
+						...engagementGroups.filter(({ id }) => id !== group.id),
+						{
+							...group,
+							combatants
+						}
+					].sort((a, b) => a.id - b.id)
+				};
 			} else {
-				engagementGroups = engagementGroups.filter(({ id }) => id !== group.id);
+				encounter = {
+					...encounter,
+					engagementGroups: engagementGroups.filter(({ id }) => id !== group.id)
+				};
 			}
 		}
 	}
