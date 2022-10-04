@@ -1,19 +1,23 @@
 <script lang="ts">
 	import CombatEntry from '$lib/components/CombatEntry.svelte';
+	import GroupEntry from '$lib/components/GroupEntry.svelte';
 	import type { Combatant } from '$lib/models/Combatant';
 	import type { Encounter } from '$lib/models/Encounter';
+	import type { EngagementGroup } from '$lib/models/EngagementGroup';
 
 	let encounter: Encounter = {
 		combatants: [],
-		engagementGroups: []
+		engagementGroups: [],
+		engagementGroupRanges: {}
 	};
 
 	$: combatants = encounter.combatants;
 	$: engagementGroups = encounter.engagementGroups;
 
 	let engagingCombatant: Combatant['id'] | null = null;
+	let mergingGroup: EngagementGroup['id'] | null = null;
 
-	function createNewCombatant(player: boolean) {
+	function createNewCombatant(isPlayer: boolean) {
 		return () => {
 			encounter = {
 				...encounter,
@@ -26,7 +30,7 @@
 						damage: null,
 						hp: null,
 						notes: '',
-						player
+						isPlayer
 					}
 				]
 			};
@@ -94,13 +98,36 @@
 			}
 		}
 	}
+
+	function setMergingGroup(event: CustomEvent<EngagementGroup['id']>) {
+		mergingGroup = event.detail;
+	}
+
+	function mergeWith(id: EngagementGroup['id']) {
+		return () => {
+			// const group = engagementGroups.find(({ combatants }) => combatants.includes(id)) ?? {
+			// 	id: (engagementGroups.map(({ id }) => id).sort()[engagementGroups.length - 1] ?? -1) + 1,
+			// 	combatants: [id]
+			// };
+			// encounter = {
+			// 	...encounter,
+			// 	engagementGroups: [
+			// 		...engagementGroups.filter(({ id }) => id !== group.id),
+			// 		{
+			// 			...group,
+			// 			combatants: [...group.combatants, engagingCombatant]
+			// 		}
+			// 	].sort((a, b) => a.id - b.id)
+			// };
+			// engagingCombatant = null;
+		};
+	}
 </script>
 
 <h1>Dungeon Combat</h1>
 
 <table>
 	<tr>
-		<th>ID</th>
 		<th>Group</th>
 		<th>Name</th>
 		<th>Initiative</th>
@@ -112,7 +139,7 @@
 	{#each combatants as combatant, i}
 		<CombatEntry
 			{combatant}
-			{engagementGroups}
+			{encounter}
 			on:change={updateCombatant(i)}
 			on:engage={setEngagingCombatant}
 			on:disengage={disengageCombatant}
@@ -132,3 +159,19 @@
 
 <button on:click={createNewCombatant(true)}>New player</button>
 <button on:click={createNewCombatant(false)}>New non-player</button>
+
+<h2>Groups</h2>
+
+<table>
+	<tr>
+		<th>ID</th>
+		<th>Initiative</th>
+		{#each engagementGroups as group}
+			<th>Range to {group.id}</th>
+		{/each}
+	</tr>
+
+	{#each engagementGroups as group}
+		<GroupEntry {group} {encounter} on:merge={setMergingGroup} />
+	{/each}
+</table>

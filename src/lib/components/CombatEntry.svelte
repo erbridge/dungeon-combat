@@ -1,13 +1,15 @@
 <script lang="ts">
 	import CombatEntryCell from '$lib/components/CombatEntryCell.svelte';
 	import type { Combatant } from '$lib/models/Combatant';
-	import type { EngagementGroup } from '$lib/models/EngagementGroup';
+	import type { Encounter } from '$lib/models/Encounter';
 	import { createEventDispatcher } from 'svelte';
 
 	export let combatant: Combatant;
-	export let engagementGroups: EngagementGroup[];
+	export let encounter: Encounter;
 
-	$: engagementGroup = engagementGroups.find(({ combatants }) => combatants.includes(combatant.id));
+	$: engagementGroup = encounter.engagementGroups.find(({ combatants }) =>
+		combatants.includes(combatant.id)
+	);
 
 	const dispatch = createEventDispatcher<{
 		change: Combatant;
@@ -34,7 +36,6 @@
 </script>
 
 <tr>
-	<td>{combatant.id}</td>
 	<td>{engagementGroup?.id ?? 'free'}</td>
 	<CombatEntryCell type="text" name="name" value={combatant.name} editOnInit on:change={change} />
 	<CombatEntryCell
@@ -43,8 +44,8 @@
 		value={combatant.initiative}
 		on:change={change}
 	/>
-	{#if combatant.player}
-		<td />
+	{#if combatant.isPlayer}
+		<td>-</td>
 	{:else}
 		<CombatEntryCell
 			type="number"
